@@ -1,0 +1,8 @@
+version: '0.18.1'
+
+services:
+  devopschukudu:
+    image: devopschuduku/litecoin
+    build:
+      context: .
+      dockerfile: ./Dockerfile
