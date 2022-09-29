@@ -42,11 +42,11 @@ RUN mkdir "$LITECOIN_DATA" \
 	&& chown -h litecoin:litecoin /home/litecoin/.litecoin
 VOLUME /data
 
-#copy docker-entrypoint to image and run entypoint.sh (de-elavate from ROOT to litecoin user)
+# copy docker-entrypoint to image and run entypoint.sh (de-elavate from ROOT to litecoin user)
 COPY docker-entrypoint.sh /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
 
-#expose following ports
+# expose following ports
 EXPOSE 9332 9333 19335 19332 19444 19332
 # start litecoin deamon
 CMD ["litecoind"]

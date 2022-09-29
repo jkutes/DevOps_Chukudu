@@ -1,4 +1,5 @@
 #!/bin/bash
+
 # show error line and exit on no zero return
 set -e 
 
@@ -11,12 +12,12 @@ IMGID=$(docker images|grep ${IMAGE}|grep ${TAG}|awk '{print $3}')
 echo "Removing Litecoin image in case it exists already"
 docker rmi $IMGID 
 
-#build
+# build
 echo 
 echo "Buildeing Litecoin"
 docker build -t $IMAGE:$TAG --no-cache -f Dockerfile .
 
-#list litecoin images
+# list litecoin images
 echo 
 echo "Listing current Litecoin images"
 docker image ls|grep $IMAGE
