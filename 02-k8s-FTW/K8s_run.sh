@@ -2,28 +2,28 @@
 
 
 # start minikube for testing
-#minikube start
+minikube start
 # set local docker, important when not pulling images from DockerHub, just locally 
 #eval $(minikube docker-env)
 
 # get storage class list
-#kubectl get storageclass
+kubectl get storageclass
 # list presistance volumes
-#kubectl get pv
+kubectl get pv
 # list presistance volume claims
-#kubectl get pvc
+kubectl get pvc
 
 # cleanup
-#kubectl delete -f Litecoin-k8s-Statefulset.yaml
-#kubectl delete -f Litecoin-service.yaml
-#kubectl delete -f secret.yaml
+kubectl delete -f Litecoin-k8s-Statefulset.yaml
+kubectl delete -f Litecoin-service.yaml
+kubectl delete -f secret.yaml
 
 # apply secret
 # using simple secrect here, but we would use hashiCorp Vault instead
 kubectl apply -f secret.yaml
 
 # get secret
-#kubectl get secrets
+kubectl get secrets
 
 # apply stateful set
 kubectl apply -f Litecoin-k8s-Statefulset.yaml
@@ -41,4 +41,4 @@ kubectl apply -f Litecoin-service.yaml
 kubectl get svc
 
 # access
-kubectl exec -it litecoin /bin/sh
+#kubectl exec -it litecoin /bin/sh
