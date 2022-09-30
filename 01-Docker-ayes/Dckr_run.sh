@@ -55,7 +55,7 @@ echo "Listing litecoin containers"
 docker ps | grep $CONT
 echo
 echo "trail logs"
-[[ $(whoami) == "jenkins" ]] && docker logs --follow --until=2s $CONT || docker logs -f $CONT
+[[ $(whoami) == "jenkins" ]] && docker logs --follow --until=5s $CONT || docker logs -f $CONT
 # trail logs only for 2 seconds if running as jenkins (for pipeline not to wait ) otherwise just trail
 
 # access to debug
