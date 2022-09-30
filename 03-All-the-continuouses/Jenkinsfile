@@ -1,14 +1,16 @@
 #!/usr/bin/env groovy
 pipeline {
       /*
-     * Run on an agent configured with a label 'docker'.
-     * This agent will need docker, K8s, git installed at a minimum.
+     * Run on any agent for the test, but better on one labeled 'docker'.
+     * Docker agent will have docker, K8s, git installed at a minimum.
      */
-    agent {
-        node {
-            label 'docker'
-        }
-    }
+    
+    agent any
+    // agent {
+    //     node {
+    //         //label 'docker'
+    //     }
+    // }
 
     environment {       
         SLACK_CHANNEL = "#deployment-notifications"
