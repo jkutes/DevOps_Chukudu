@@ -2,7 +2,7 @@
 # use debian:strech-slim as base (slimmed down version)
 FROM debian:stretch-slim
 LABEL Name=LITECOIN Version=0.18.1
-# create litecoin user and group
+# create litecoin group and user
 RUN groupadd -r litecoin && useradd -r -m -g litecoin litecoin
 
 #  install the dependencies - ca certs, dirmngr,gosu,gpg,wget
@@ -42,8 +42,9 @@ RUN mkdir "$LITECOIN_DATA" \
 	&& chown -h litecoin:litecoin /home/litecoin/.litecoin
 VOLUME /data
 
-# copy docker-entrypoint to image and run entypoint.sh (de-elavate from ROOT to litecoin user)
+# copy docker-entrypoint to image , make it executable and run entypoint.sh (de-elavate from ROOT to litecoin user)
 COPY docker-entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
 
 # expose following ports

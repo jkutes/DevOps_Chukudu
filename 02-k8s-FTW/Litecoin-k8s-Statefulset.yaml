@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: litecoin
+spec:
+  selector:
+    matchLabels:
+      app: litecoin
+  serviceName: "litecoin"
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: litecoin
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: litecoin
+        image: devopschuduku/litecoin:0.18.1
+        #imagePullPolicy: Never
+        ports:
+        - containerPort: 3089
+        volumeMounts:
+        - name: litecoin-store
+          mountPath: "/tmp/data"
+        env:
+          - name: LITECOIN_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: litecoin-password
+                key: LITECOIN_ROOT_PASSWORD
+  volumeClaimTemplates:
+  - metadata:
+      name: litecoin-store
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      storageClassName: "standard"
+      resources:
+        requests:
+          storage: 1Gi

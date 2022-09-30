@@ -1,0 +1,67 @@
+#!/usr/bin/env groovy
+pipeline {
+      /*
+     * Run on an agent configured with a label 'docker'.
+     * This agent will need docker, K8s, git installed at a minimum.
+     */
+    agent {
+        node {
+            label 'docker'
+        }
+    }
+
+    environment {
+        TEST_PREFIX = "test-IMAGE"
+        TEST_IMAGE = "${env.TEST_PREFIX}:${env.BUILD_NUMBER}"
+        TEST_CONTAINER = "${env.TEST_PREFIX}-${env.BUILD_NUMBER}"
+        REGISTRY_ADDRESS = "my.registry.address.com"
+
+        SLACK_CHANNEL = "#deployment-notifications"
+        SLACK_TEAM_DOMAIN = "MY-SLACK-TEAM"
+        SLACK_TOKEN = credentials("slack_token")
+        DEPLOY_URL = "https://deployment.example.com/"
+
+        COMPOSE_FILE = "docker-compose.yml"
+        REGISTRY_AUTH = credentials("docker-registry")
+        STACK_PREFIX = "LiteCoin"
+    }
+
+  stages {
+    stage("Litecoin-DOCKER") {
+      steps {
+        echo "building docker image"
+        sh 'chmod +x 01-Docker-ayes/Dckr_run.sh'
+        sh '01-Docker-ayes/Dckr_run.sh'
+      }
+    }
+
+    stage("Litecoin-K8s") {
+      steps {
+        echo "Building K8s StatefulSet"
+        sh 'chmod +x 02-k8s-FTW/K8s_run.sh'
+        sh '02-k8s-FTW/K8s_run.sh'
+      }
+      post {
+            success {
+                slackSend(
+                        teamDomain: "${env.SLACK_TEAM_DOMAIN}",
+                        token: "${env.SLACK_TOKEN}",
+                        channel: "${env.SLACK_CHANNEL}",
+                        color: "good",
+                        message: "${env.STACK_PREFIX} production deploy: *${env.DEPLOY_VERSION}*. <${env.DEPLOY_URL}|Access service> - <${env.BUILD_URL}|Check build>"
+                )
+            }
+
+            failure {
+                slackSend(
+                        teamDomain: "${env.SLACK_TEAM_DOMAIN}",
+                        token: "${env.SLACK_TOKEN}",
+                        channel: "${env.SLACK_CHANNEL}",
+                        color: "danger",
+                        message: "${env.STACK_PREFIX} production deploy failed: *${env.DEPLOY_VERSION}*. <${env.BUILD_URL}|Check build>"
+                )
+            }
+      }
+    }
+  }
+}
