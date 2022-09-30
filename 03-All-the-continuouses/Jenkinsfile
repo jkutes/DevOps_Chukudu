@@ -10,14 +10,13 @@ pipeline {
         }
     }
 
-    environment {
-        REGISTRY_ADDRESS = "my.registry.address.com"
-
+    environment {       
         SLACK_CHANNEL = "#deployment-notifications"
-        SLACK_TEAM_DOMAIN = "MY-SLACK-TEAM"
+        SLACK_TEAM_DOMAIN = "LITECOIN-SLACK-TEAM"
         SLACK_TOKEN = credentials("slack_token")
         DEPLOY_URL = "https://deployment.example.com/"
 
+        REGISTRY_ADDRESS = "my.registry.address.com"
         REGISTRY_AUTH = credentials("docker-registry")
         STACK_PREFIX = "LiteCoin"
     }
@@ -25,7 +24,7 @@ pipeline {
   stages {
     stage("Litecoin-DOCKER") {
       steps {
-        echo "building docker image"
+        echo "Building docker image"
         sh 'chmod +x 01-Docker-ayes/Dckr_run.sh'
         sh '01-Docker-ayes/Dckr_run.sh'
       }
