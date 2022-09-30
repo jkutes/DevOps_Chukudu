@@ -1,27 +1,40 @@
 #!/usr/bin/env groovy
 pipeline {
-      /*
-     * Run on any agent for the test, but better on one labeled 'docker'.
-     * Docker agent will have docker, K8s, git installed at a minimum.
-     */
+    /*
+     This is GitHub project, which checksout DevopsChukudu project from GitHub and then runs 2 stages
+
+     Stage one
+      Run "Dckr_run.sh" from 01 folder to build, scan, run docker image
+     Stage two
+      Run "K8s_run.sh" from 02 folder to define and run litecoin statefulset, presist volume 
     
-    agent any
-    // agent {
-    //     node {
-    //         //label 'docker'
-    //     }
-    // }
+     In the end Send Slack notification on success or failure to a specific channel
 
-    environment {       
-        SLACK_CHANNEL = "#deployment-notifications"
-        SLACK_TEAM_DOMAIN = "LITECOIN-SLACK-TEAM"
-        SLACK_TOKEN = credentials("slack_token")
-        DEPLOY_URL = "https://deployment.example.com/"
+     Run on any agent for the test purposes, but better on one labeled 'docker'.
+     Docker agent will have docker, K8s, git installed at a minimum.
+     
+    */
+  
+  agent any
+  // agent {
+  //     node {
+  //         //label 'docker'
+  //     }
+  // }
 
-        REGISTRY_ADDRESS = "my.registry.address.com"
-        REGISTRY_AUTH = credentials("docker-registry")
-        STACK_PREFIX = "LiteCoin"
-    }
+  // set env -> Slack notofication; deployment K8s traget; Docker registry 
+  environment {       
+      SLK_CHNL = "#Build-Notifications"
+      SLK_TEAM = "LITECOIN-TEAM"
+      SLK_TKN = credentials("slck_tkn")  //defined in Jenkins credentails
+      
+      DPLY_URL = "https://our.deployK8sTarget.com/"
+      STK_PREFIX = "LiteCoin"
+      DPLY_VERSION = "0.18.1"
+
+      // REG_ADRS = "our.Docker-registry.com"
+      // REG_AUTH = credentials("docker-reg")  //defined in Jenkins credentials
+  }
 
   stages {
     stage("Litecoin-DOCKER") {
@@ -41,21 +54,21 @@ pipeline {
       post {
             success {
                 slackSend(
-                        teamDomain: "${env.SLACK_TEAM_DOMAIN}",
-                        token: "${env.SLACK_TOKEN}",
-                        channel: "${env.SLACK_CHANNEL}",
+                        channel: "${env.SLK_CHNL}",
+                        teamDomain: "${env.SLK_TEAM}",
+                        token: "${env.SLK_TKN}",
                         color: "good",
-                        message: "${env.STACK_PREFIX} production deploy: *${env.DEPLOY_VERSION}*. <${env.DEPLOY_URL}|Access service> - <${env.BUILD_URL}|Check build>"
+                        message: "${env.STK_PREFIX} deploy successful: *${env.DPLY_VERSION}*. <${env.DPLY_URL}|To access this service> - <${env.BUILD_URL}|Check this build>"
                 )
             }
 
             failure {
                 slackSend(
-                        teamDomain: "${env.SLACK_TEAM_DOMAIN}",
-                        token: "${env.SLACK_TOKEN}",
-                        channel: "${env.SLACK_CHANNEL}",
+                        channel: "${env.SLK_CHNL}",
+                        teamDomain: "${env.SLK_TEAM}",
+                        token: "${env.SLK_TKN}",
                         color: "danger",
-                        message: "${env.STACK_PREFIX} production deploy failed: *${env.DEPLOY_VERSION}*. <${env.BUILD_URL}|Check build>"
+                        message: "${env.STK_PREFIX} deployment failed: *${env.DPLY_VERSION}*. <${env.BUILD_URL}|Check this build>"
                 )
             }
       }
