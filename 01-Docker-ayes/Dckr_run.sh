@@ -29,12 +29,12 @@ docker build -t $IMAGE:$TAG --no-cache -f Dockerfile . || (echo "Build failed ex
 # inline scan
 echo 
 echo "Inline Scan Anchore"
-# curl -s https://ci-tools.anchore.io/inline_scan-v0.6.0 | bash -s -- -f -d Dockerfile -b $PWD/.anchore_policy.json $IMAGE:$TAG
+curl -s https://ci-tools.anchore.io/inline_scan-v0.6.0 | bash -s -- -f -d Dockerfile -b $PWD/.anchore_policy.json $IMAGE:$TAG
 
 
 # push to DockerHub as to pull it later from k8s
-#docker login
-#docker push $IMAGE:$TAG
+docker login
+docker push $IMAGE:$TAG
 
 # list litecoin images
 echo 
@@ -56,8 +56,7 @@ docker ps | grep $CONT
 echo
 echo "trail logs"
 [[ $(whoami) == "jenkins" ]] && docker logs --follow --until=5s $CONT || docker logs -f $CONT
-# trail logs only for 2 seconds if running as jenkins (for pipeline not to wait ) otherwise just trail
+# trail logs only for 5 seconds if running as jenkins (for pipeline not to wait ) otherwise just trail
 
 # access to debug
 # docker exec -it $CONTID /bin/bash
-

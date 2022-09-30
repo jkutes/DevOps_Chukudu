@@ -24,11 +24,11 @@ pipeline {
   agent any
   // agent {
   //     node {
-  //         //label 'docker'
+  //         label 'docker'
   //     }
   // }
 
-  // set env -> Slack notofication; deployment K8s traget; Docker registry 
+  // set env vars -> Slack notofication; deployment K8s traget; Docker registry 
   environment {       
       SLK_CHNL = "#Build-Notifications"
       SLK_TEAM = "LITECOIN-TEAM"
@@ -43,6 +43,7 @@ pipeline {
   }
 
   stages {
+    // Stage One - build Docker image
     stage("Litecoin-DOCKER") {
       steps {
         echo "Building docker image"
@@ -50,13 +51,15 @@ pipeline {
         sh '01-Docker-ayes/Dckr_run.sh'
       }
     }
-
+    // Stage Two - build K8s statefulset
     stage("Litecoin-K8s") {
       steps {
         echo "Building K8s StatefulSet"
         sh 'chmod +x 02-k8s-FTW/K8s_run.sh'
         sh '02-k8s-FTW/K8s_run.sh'
       }
+
+      // post action - send to SLACK
       post {
             success {
                 slackSend(
@@ -64,7 +67,7 @@ pipeline {
                         teamDomain: "${env.SLK_TEAM}",
                         token: "${env.SLK_TKN}",
                         color: "good",
-                        message: "${env.STK_PREFIX} deploy successful: *${env.DPLY_VERSION}*. <${env.DPLY_URL}|To access this service> - <${env.BUILD_URL}|Check this build>"
+                        message: "${env.STK_PREFIX} deployed successfully: *${env.DPLY_VERSION}*. <${env.DPLY_URL}|To access this service> - <${env.BUILD_URL}|Check this build>"
                 )
             }
 
