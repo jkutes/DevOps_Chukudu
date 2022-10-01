@@ -3,11 +3,17 @@
 # exit on error
 set -e 
 
+STATEFULLSET="Litecoin-k8s-Statefulset.yaml"
+SERVICE="Litecoin-service.yaml"
+SECRET="secret.yaml"
 
 # start minikube for testing
 # minikube delete
 
-minikube start --v=5
+minikube start
+
+#debug minikube
+#minikube start --v=5
 # set local docker, important when not pulling images from DockerHub, just locally 
 #eval $(minikube docker-env)
 systemctl enable kubelet.service
@@ -23,19 +29,19 @@ kubectl get pv
 kubectl get pvc
 
 # cleanup
-kubectl delete -f Litecoin-k8s-Statefulset.yaml
-kubectl delete -f Litecoin-service.yaml
-kubectl delete -f secret.yaml
+kubectl delete -f $STATEFULLSET
+kubectl delete -f $SERVICE
+kubectl delete -f $SECRET
 
 # apply secret
 # using simple secrect here, but we would use hashiCorp Vault instead
-kubectl apply -f secret.yaml
+kubectl apply -f $SECRET
 
 # get secret
 kubectl get secrets
 
 # apply stateful set
-kubectl apply -f Litecoin-k8s-Statefulset.yaml
+kubectl apply -f $STATEFULLSET
 
 # check on the statefulset
 kubectl describe statefulset litecoin 
@@ -44,7 +50,7 @@ kubectl describe statefulset litecoin
 kubectl get pods -w -l app=litecoin
 
 # apply service
-kubectl apply -f Litecoin-service.yaml
+kubectl apply -f $SERVICE
 
 # Get the list of running services
 kubectl get svc
