@@ -52,7 +52,6 @@ pipeline {
     stage("Litecoin-DOCKER") {
       steps {
         echo "Building docker image"
-        sh 'alias kubectl="minikube kubectl --"'
         sh 'chmod +x 01-Docker-ayes/Dckr_run.sh'
         sh '01-Docker-ayes/Dckr_run.sh'
       }

@@ -6,6 +6,9 @@ minikube start
 # set local docker, important when not pulling images from DockerHub, just locally 
 #eval $(minikube docker-env)
 
+# set alias for kubectl for jenkinss
+alias kubectl="minikube kubectl --"
+
 # get storage class list
 kubectl get storageclass
 # list presistance volumes
