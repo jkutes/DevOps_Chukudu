@@ -19,6 +19,11 @@ pipeline {
       sudo gpasswd -a jenkins docker
       # restart docker to apply
 
+      # if using minikube set alias for kubect
+      # kubectl alias
+      alias kubectl="minikube kubectl --"
+
+
     */
   
   agent any
@@ -47,6 +52,7 @@ pipeline {
     stage("Litecoin-DOCKER") {
       steps {
         echo "Building docker image"
+        sh 'alias kubectl="minikube kubectl --"'
         sh 'chmod +x 01-Docker-ayes/Dckr_run.sh'
         sh '01-Docker-ayes/Dckr_run.sh'
       }
