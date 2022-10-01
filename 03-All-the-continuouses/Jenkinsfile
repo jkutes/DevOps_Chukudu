@@ -52,6 +52,7 @@ pipeline {
     stage("Litecoin-DOCKER") {
       steps {
         echo "Building docker image"
+        sh 'pwd'
         sh 'cd 01-Docker-ayes'
         sh 'chmod +x Dckr_run.sh'
         sh 'Dckr_run.sh'
