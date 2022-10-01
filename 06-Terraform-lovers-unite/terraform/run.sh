@@ -6,7 +6,7 @@
 # terrraform init
 
 # test
-terraform plan -var-file terraform-prod.tfvars -auto-approve
+terraform plan -var-file terraform-prod.tfvars
 
 # run
 # terraform apply -var-file terraform-prod.tfvars -auto-approve
