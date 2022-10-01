@@ -4,6 +4,8 @@ provider "aws" {
 variable env_prefix {}
 
 
+// work in progress - not enough experience with AWS IAM :()
+
 module "iam_assumable_role" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-assumable-role"
   create_role = true
