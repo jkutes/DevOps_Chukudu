@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 
 # change Volume "/data" path to your needs.
 
