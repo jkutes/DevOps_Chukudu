@@ -85,6 +85,10 @@ pipeline {
                         message: "${env.STK_PREFIX} deployment failed: *${env.DPLY_VERSION}*. <${env.BUILD_URL}|Check this build>"
                 )
             }
+            cleanup {
+              echo "Cleaning Workspace..."
+              cleanWs()
+            }
       }
     }
   }
