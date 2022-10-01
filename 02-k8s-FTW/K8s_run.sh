@@ -1,10 +1,16 @@
 #!/bin/bash -x
 
+# exit on error
+set -e 
+
 
 # start minikube for testing
-minikube start
+# minikube delete
+
+minikube start --v=5
 # set local docker, important when not pulling images from DockerHub, just locally 
 #eval $(minikube docker-env)
+systemctl enable kubelet.service
 
 # set alias for kubectl for jenkinss
 alias kubectl="minikube kubectl --"
