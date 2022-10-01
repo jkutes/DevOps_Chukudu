@@ -55,6 +55,7 @@ pipeline {
         sh 'pwd'
         sh 'ls -l `pwd`'
         sh 'cd 01-Docker-ayes'
+        sh 'ls -l `pwd`'
         sh 'chmod +x Dckr_run.sh'
         sh 'Dckr_run.sh'
       }
