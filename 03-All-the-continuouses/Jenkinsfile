@@ -52,7 +52,7 @@ pipeline {
     stage("Litecoin-DOCKER") {
       steps {
         echo "Building docker image"
-        sh 'cd ${env.WORKSPACE}/01-Docker-ayes'
+        sh 'cd 01-Docker-ayes'
         sh 'chmod +x Dckr_run.sh'
         sh 'Dckr_run.sh'
       }
@@ -61,7 +61,7 @@ pipeline {
     stage("Litecoin-K8s") {
       steps {
         echo "Building K8s StatefulSet"
-        sh 'cd ${env.WORKSPACE}/02-k8s-FTW/'
+        sh 'cd 02-k8s-FTW'
         sh 'chmod +x K8s_run.sh'
         sh 'K8s_run.sh'
       }
