@@ -52,16 +52,18 @@ pipeline {
     stage("Litecoin-DOCKER") {
       steps {
         echo "Building docker image"
-        sh 'chmod +x 01-Docker-ayes/Dckr_run.sh'
-        sh '01-Docker-ayes/Dckr_run.sh'
+        sh 'cd ${env.WORKSPACE}/01-Docker-ayes'
+        sh 'chmod +x Dckr_run.sh'
+        sh 'Dckr_run.sh'
       }
     }
     // Stage Two - build K8s statefulset
     stage("Litecoin-K8s") {
       steps {
         echo "Building K8s StatefulSet"
-        sh 'chmod +x 02-k8s-FTW/K8s_run.sh'
-        sh '02-k8s-FTW/K8s_run.sh'
+        sh 'cd ${env.WORKSPACE}/02-k8s-FTW/'
+        sh 'chmod +x K8s_run.sh'
+        sh 'K8s_run.sh'
       }
 
       // post action - send to SLACK

@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 
 # change Volume "/data" path to your needs.
 
@@ -23,13 +23,13 @@ echo "Removing Litecoin image in case it exists already"
 
 # build
 echo 
-echo "Buildeing Litecoin"
+echo "Building Litecoin"
 docker build -t $IMAGE:$TAG --no-cache -f Dockerfile . || (echo "Build failed exiting"; exit 2)
 
 # inline scan
 echo 
 echo "Inline Scan Anchore"
-curl -s https://ci-tools.anchore.io/inline_scan-v0.6.0 | bash -s -- -f -d Dockerfile -b $PWD/.anchore_policy.json $IMAGE:$TAG
+curl -s https://ci-tools.anchore.io/inline_scan-v0.6.0 | bash -s -- -f -d $PWD/Dockerfile -b $PWD/.anchore_policy.json $IMAGE:$TAG
 
 
 # push to DockerHub as to pull it later from k8s
